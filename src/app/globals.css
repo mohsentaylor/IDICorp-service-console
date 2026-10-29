@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Tailwind v4 turns each `--color-*` into utilities such as
+ * `bg-forest`, `text-ink` or `border-line`.
+ */
+@theme {
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-ink: #203b36;
+  --color-ink-soft: #284339;
+  --color-canvas: #f7f9f7;
+  --color-forest: #214d3d;
+  --color-forest-dark: #173d30;
+  --color-story: #173f35;
+  --color-line: #e2e8df;
+  --color-line-soft: #edf0e8;
+  --color-field: #d9e2db;
+  --color-muted: #68766c;
+  --color-subtle: #96a08e;
+  --color-leaf: #90a96b;
+  --color-mint: #eaf0e6;
+  --color-soft: #f2f6ed;
+  --color-focus: #c39728;
+  --color-danger: #a23f33;
+  --color-alert-bg: #fff0eb;
+  --color-alert-ink: #933e2e;
+  --color-alert-line: #edd5cb;
+}
+
+/* Base element styles shared by every screen. */
+@layer base {
+  html {
+    font-size: 14px;
+    line-height: 1.5;
+    font-synthesis: none;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans;
+  }
+  h1 {
+    @apply text-[38px] leading-[1.15] tracking-[-1.5px] font-semibold my-3 max-md:text-[30px];
+  }
+  h2 {
+    @apply text-[19px] tracking-[-0.4px] font-bold;
+  }
+  h3 {
+    @apply text-[15px] font-bold;
+  }
+  label {
+    @apply block text-xs font-semibold mb-[18px];
+  }
+  input:not([type="checkbox"]),
+  textarea,
+  select {
+    @apply mt-[7px] block w-full rounded-[7px] border border-field bg-white p-3 text-ink-soft font-normal transition-colors;
+  }
+  textarea {
+    @apply min-h-20 resize-y;
+  }
+  input[type="checkbox"] {
+    @apply size-[18px] shrink-0 accent-[#2c634d];
+  }
+  button {
+    @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* Visible keyboard focus everywhere (accessibility requirement). */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    @apply outline-3 outline-offset-3 outline-focus;
+  }
+  dialog::backdrop {
+    background: #17362e66;
+    backdrop-filter: blur(3px);
+  }
+}
