@@ -114,6 +114,25 @@ handshake, which browsers cannot send. `server.ts` runs Next.js normally and
 forwards only `/ws/calculator` and `/ws/echo` to the backend. All HTTP traffic,
 pages and configuration are handled by Next.js itself.
 
+## Static demo build (GitHub Pages)
+
+The hosted version must run from static files with no backend, and the real API
+only accepts `localhost` origins (CORS). So the static build ships a built-in
+demo service that runs in the browser and follows the same API contract:
+CAPTCHA + salt sign-in (`admin` / `admin`), session tasks with one-hour expiry,
+calculator and echo sockets, and a streamed echo. A yellow **Demo mode** banner
+makes this clear. Local `npm run dev` / `npm start` still use the real backend.
+
+```bash
+npm run build:static
+```
+
+Output goes to `out/`. For a project site under `/<repository>/`, set
+`BASE_PATH=/<repository>` (the GitHub Actions workflow in
+`.github/workflows/pages.yml` does this automatically). `DEMO_MODE=0` builds a
+static site that calls `API_BASE_URL` directly instead; it only works on an
+origin the backend allows.
+
 ## Troubleshooting
 
 - `Port 3000 is already in use` → stop the other process (Ctrl+C) or set `PORT` in `.env`.

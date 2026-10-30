@@ -1,5 +1,6 @@
 "use client";
 import { useConfig } from "@/providers/ConfigProvider";
+import { isDemoMode } from "@/lib/config/transport";
 import { Button } from "./Button";
 import type { Channel, SocketState } from "@/types";
 
@@ -27,13 +28,16 @@ export function ConnectionStatus({
         </Button>
       </div>
       <p className="-mt-2.5 mb-[22px] text-[11px] text-muted">
-        <strong className="block font-medium">Backend WebSocket</strong>
-        <code className="mt-1.5 block text-[#345e4a] wrap-anywhere">{sockets[channel].upstream}</code>
+        <strong className="block font-medium">{isDemoMode ? "Demo WebSocket" : "Backend WebSocket"}</strong>
+        <code className="mt-1.5 block text-[#345e4a] wrap-anywhere">
+          {isDemoMode ? `in-browser ${sockets[channel].path}` : sockets[channel].upstream}
+        </code>
       </p>
       {!live && state !== "Connecting" && (
         <p className="my-3.5 text-xs leading-[1.7] text-[#66735f]">
-          The WebSocket connection is unavailable. No result is calculated or echoed locally. Check your
-          sign-in session and the configured service address, then retry.
+          {isDemoMode
+            ? "The WebSocket connection is unavailable. Press Reconnect, or sign in again if the session ended."
+            : "The WebSocket connection is unavailable. No result is calculated or echoed locally. Check your sign-in session and the configured service address, then retry."}
         </p>
       )}
     </>

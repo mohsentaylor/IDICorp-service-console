@@ -5,6 +5,8 @@
  */
 import { ApiError } from "@/types";
 import { expireSession } from "@/lib/session/sessionEvents";
+import { apiUrl } from "@/lib/config/apiOrigin";
+import { transportFetch } from "@/lib/config/transport";
 
 export const REQUEST_TIMEOUT_MS = 20_000;
 
@@ -56,7 +58,7 @@ export async function request<T = void>(path: string, options: RequestOptions<T>
   if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
 
   try {
-    const response = await fetch(path, {
+    const response = await transportFetch(apiUrl(path), {
       ...init,
       cache: "no-store",
       credentials: "include",

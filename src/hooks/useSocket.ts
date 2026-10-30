@@ -13,6 +13,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useConfig } from "@/providers/ConfigProvider";
 import { echoProtocols, sameOriginSocketUrl } from "@/lib/realtime/echoProtocol";
 import { expireSession } from "@/lib/session/sessionEvents";
+import { isDirectMode } from "@/lib/config/apiOrigin";
+import { openSocket } from "@/lib/config/transport";
 import type { Channel, SocketState } from "@/types";
 
 export const CONNECT_TIMEOUT_MS = 10_000;
@@ -29,6 +31,8 @@ function parseJson(text: unknown): { type?: unknown; error?: unknown } | null {
 export function useSocket(channel: Channel, token: string, onMessage: (data: string) => void) {
   const { sockets } = useConfig();
   const path = sockets[channel].path;
+  // Static builds have no local bridge: connect straight to the backend.
+  const url = isDirectMode ? sockets[channel].upstream : null;
   const [state, setState] = useState<SocketState>("Connecting");
   const [attempt, setAttempt] = useState(0);
   const socketRef = useRef<WebSocket | null>(null);
@@ -46,8 +50,8 @@ export function useSocket(channel: Channel, token: string, onMessage: (data: str
 
     // Deferred so React StrictMode's setup/cleanup replay never opens a socket.
     const start = setTimeout(() => {
-      const socket = new WebSocket(
-        sameOriginSocketUrl(path, window.location),
+      const socket = openSocket(
+        url ?? sameOriginSocketUrl(path, window.location),
         channel === "echo" ? echoProtocols(token) : undefined,
       );
       ws = socket;
@@ -99,7 +103,7 @@ export function useSocket(channel: Channel, token: string, onMessage: (data: str
         ws?.close();
       }
     };
-  }, [path, channel, token, attempt]);
+  }, [path, url, channel, token, attempt]);
 
   const send = useCallback(
     (data: string) => {

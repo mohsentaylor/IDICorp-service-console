@@ -5,13 +5,12 @@
  */
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { connection } from "next/server";
 import { readSettings } from "@/lib/config/settings";
 import { ConfigProvider } from "@/providers/ConfigProvider";
 import { SessionProvider } from "@/providers/SessionProvider";
 import "./globals.css";
 
-// Environment variables must be read at request time, not baked in at build.
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "IDICorp · Service console",
@@ -20,7 +19,10 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#153c35" };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Server mode: read the environment on every request, not once at build.
+  // Static export: there is no request, so settings are fixed at build time.
+  if (process.env.STATIC_EXPORT !== "1") await connection();
   const { client } = readSettings();
   return (
     <html lang="en">

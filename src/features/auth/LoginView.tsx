@@ -9,6 +9,8 @@ import { FineText } from "@/components/ui/FineText";
 import { ServiceBanner } from "@/components/layout/ServiceBanner";
 import { useSession } from "@/providers/SessionProvider";
 import { safeNextPath } from "@/lib/navigation/views";
+import { isDemoMode } from "@/lib/config/transport";
+import { DEMO_PASSWORD, DEMO_USERNAME } from "@/lib/demo/demoBackend";
 import { LoginStory } from "./LoginStory";
 import { useLogin } from "@/hooks/useLogin";
 
@@ -29,7 +31,11 @@ export function LoginView() {
           <ServiceBanner />
           <Eyebrow>WELCOME BACK</Eyebrow>
           <h2 className="my-3 text-[25px] md:text-[28px]">Sign in to your workspace</h2>
-          <p className="mb-7 text-muted">Use the credentials supplied for your environment.</p>
+          <p className="mb-7 text-muted">
+            {isDemoMode
+              ? `Demo credentials: ${DEMO_USERNAME} / ${DEMO_PASSWORD}. Type the code shown in the image.`
+              : "Use the credentials supplied for your environment."}
+          </p>
           <Alert text={login.error || notice} />
           <form onSubmit={login.submit}>
             <label>

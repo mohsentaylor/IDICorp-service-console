@@ -1,10 +1,12 @@
 /** Streaming echo: sends text and exposes the raw response body stream. */
 import { ApiError } from "@/types";
 import { expireSession } from "@/lib/session/sessionEvents";
+import { apiUrl } from "@/lib/config/apiOrigin";
+import { transportFetch } from "@/lib/config/transport";
 
 export const streamService = {
   async open(token: string, text: string, signal: AbortSignal): Promise<ReadableStream<Uint8Array>> {
-    const response = await fetch("/api/echo/stream", {
+    const response = await transportFetch(apiUrl("/api/echo/stream"), {
       method: "POST",
       credentials: "include",
       cache: "no-store",

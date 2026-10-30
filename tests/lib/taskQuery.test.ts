@@ -19,6 +19,7 @@ describe("estimateExpiry", () => {
 describe("safeNextPath", () => {
   it("only allows known workspace routes", () => {
     expect(safeNextPath("?next=%2Fcalculator")).toBe("/calculator");
+    expect(safeNextPath("?next=%2Fcalculator%2F")).toBe("/calculator");
     expect(safeNextPath("?next=https%3A%2F%2Fevil.com")).toBe("/tasks");
     expect(safeNextPath("?next=%2F%2Fevil.com")).toBe("/tasks");
     expect(safeNextPath("")).toBe("/tasks");

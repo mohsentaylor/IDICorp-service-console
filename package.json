@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "next build",
+    "build:static": "node scripts/build-static.mjs",
     "start": "tsx server.ts --production",
     "lint": "tsc --noEmit",
     "test": "vitest run",

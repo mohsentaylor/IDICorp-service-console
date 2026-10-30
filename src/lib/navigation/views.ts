@@ -16,6 +16,7 @@ export const viewForPath = (pathname: string) =>
  * crafted `?next=` value can never redirect to another site.
  */
 export function safeNextPath(search: string): string {
-  const next = new URLSearchParams(search).get("next");
+  // Static hosts add a trailing slash ("/calculator/"); compare without it.
+  const next = new URLSearchParams(search).get("next")?.replace(/(.)\/+$/, "$1");
   return VIEWS.find((view) => view.href === next)?.href ?? "/tasks";
 }
